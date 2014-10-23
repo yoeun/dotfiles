@@ -80,6 +80,8 @@ CYAN="\[\033[0;36m\]"
 GREEN="\[\033[0;32m\]"
 
 # git prompt
+# we prefer to load __git_ps1 from git-prompt.sh instead of rolling our own
+# on windows, git-bash comes with __git_ps1 already registered
 if [ ! -f /usr/local/opt/git/etc/bash_completion.d/git-prompt.sh ] &&
    [[ "$(type -t '__git_ps1')" != "function" ]];
 then
