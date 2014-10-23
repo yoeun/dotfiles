@@ -25,26 +25,26 @@ else
 fi
 
 alias ll='ls -l'
- 
+
 # git shortcuts
 alias ga='git add '
 alias gd='git diff'
-alias gb="git branch" 
-alias gbc="git branch-create" 
-alias gbd="git branch-delete" 
-alias gs="git status -s" 
-alias gss="git stash save" 
-alias gsl="git stash list" 
-alias gsa="git stash apply" 
-alias gsp="git stash pop" 
-alias gd="git diff" 
-alias gco="git checkout" 
+alias gb="git branch"
+alias gbc="git branch-create"
+alias gbd="git branch-delete"
+alias gs="git status -s"
+alias gss="git stash save"
+alias gsl="git stash list"
+alias gsa="git stash apply"
+alias gsp="git stash pop"
+alias gd="git diff"
+alias gco="git checkout"
 alias go='git checkout '
 alias gc='git commit'
-alias gci="git commit -a" 
-alias gm="git merge --no-ff" 
-alias gmnc="git merge --no-ff --no-commit" 
-alias gpl="git pull --rebase" 
+alias gci="git commit -a"
+alias gm="git merge --no-ff"
+alias gmnc="git merge --no-ff --no-commit"
+alias gpl="git pull --rebase"
 alias cdr="cd ./\$(git rev-parse --show-cdup)"
 alias gk='gitk --all&'
 alias gx='gitx --all'
@@ -63,13 +63,13 @@ alias hgbo="hg bopen"
 alias hgc="hg commit"
 alias hgsync="hg brebase default"
 alias hgrc="hg rebase --continue"
- 
+
 # terminal colors
 export CLICOLOR=1
 export LS_OPTIONS='--color=auto'
 export LSCOLORS=gxfxbEaEBxxEhEhBaDaCaD
 export GREP_OPTIONS='--color=auto'
- 
+
 # define colors
 WHITE="\[\033[0m\]"
 MAGENTA="\[\033[0;35m\]"
@@ -80,7 +80,9 @@ CYAN="\[\033[0;36m\]"
 GREEN="\[\033[0;32m\]"
 
 # git prompt
-if [[ "$(type -t '__git_ps1')" != "function" ]]; then
+if [ ! -f /usr/local/opt/git/etc/bash_completion.d/git-prompt.sh ] &&
+   [[ "$(type -t '__git_ps1')" != "function" ]];
+then
   function __git_ps1 () {
     git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
   }
@@ -94,7 +96,7 @@ fi
 function parse_hg_dirty {
   [[ $( hg status 2> /dev/null ) != "" ]] && echo " *"
 }
- 
+
 function parse_hg_branch {
   hg branch 2> /dev/null | sed -e "s/\(.*\)/ (hg: \1$(parse_hg_dirty))/"
 }
@@ -108,11 +110,11 @@ else
     # a file has been modified but not added
     if [[ $(__git_ps1) =~ \*\)$ ]]
     then echo "'$YELLOW'"$(__git_ps1 " (git: %s)")
-   
+
     # a file has been added, but not commited
     elif [[ $(__git_ps1) =~ \+\)$ ]]
     then echo "'$MAGENTA'"$(__git_ps1 " (git: %s)")
-   
+
     # the state is clean, changes are commited
     else echo "'$CYAN'"$(__git_ps1 " (git: %s)")
   fi)'$LIGHT_GRAY" \w"$WHITE"\n$ "
