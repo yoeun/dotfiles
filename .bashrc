@@ -3,7 +3,27 @@
 export PATH=$PATH:$HOME/bin:
 export EDITOR='subl -w'
 
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+  platform='linux'
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+  platform='mac'
+elif [[ "$OSTYPE" == "cygwin" ]]; then
+  platform='win'
+elif [[ "$OSTYPE" == "msys" ]]; then
+  platform='win'
+elif [[ "$OSTYPE" == "freebsd"* ]]; then
+  platform='bsd'
+else
+  platform='unknown'
+fi
+
 # system
+if [[ $platform == 'win' ]]; then
+  alias ls='ls -a --color=auto'
+else
+  alias ls='ls -aG'
+fi
+
 alias ll='ls -l'
  
 # git shortcuts
@@ -60,7 +80,7 @@ CYAN="\[\033[0;36m\]"
 GREEN="\[\033[0;32m\]"
 
 # git prompt
-if [ ! -f /usr/local/opt/git/etc/bash_completion.d/git-prompt.sh ]; then
+if [[ "$(type -t '__git_ps1')" != "function" ]]; then
   function __git_ps1 () {
     git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
   }
@@ -78,17 +98,22 @@ function parse_hg_dirty {
 function parse_hg_branch {
   hg branch 2> /dev/null | sed -e "s/\(.*\)/ (hg: \1$(parse_hg_dirty))/"
 }
- 
-# custom prompt: user@machine (git|hg: branch) /current/working/directory
-export PS1=$GREEN"\n\u@\h"''$YELLOW'$(parse_hg_branch)$(
-  # a file has been modified but not added
-  if [[ $(__git_ps1) =~ \*\)$ ]]
-  then echo "'$YELLOW'"$(__git_ps1 " (git: %s)")
- 
-  # a file has been added, but not commited
-  elif [[ $(__git_ps1) =~ \+\)$ ]]
-  then echo "'$MAGENTA'"$(__git_ps1 " (git: %s)")
- 
-  # the state is clean, changes are commited
-  else echo "'$CYAN'"$(__git_ps1 " (git: %s)")
+
+# custom prompt
+# user@machine (git|hg: branch) /current/working/directory
+if [[ $platform == 'win' ]]; then
+  export PS1=$GREEN"\n\u@\h"''$YELLOW'$(parse_hg_branch)$(__git_ps1)'$LIGHT_GRAY" \w"$WHITE"\n$ "
+else
+  export PS1=$GREEN"\n\u@\h"''$YELLOW'$(parse_hg_branch)$(
+    # a file has been modified but not added
+    if [[ $(__git_ps1) =~ \*\)$ ]]
+    then echo "'$YELLOW'"$(__git_ps1 " (git: %s)")
+   
+    # a file has been added, but not commited
+    elif [[ $(__git_ps1) =~ \+\)$ ]]
+    then echo "'$MAGENTA'"$(__git_ps1 " (git: %s)")
+   
+    # the state is clean, changes are commited
+    else echo "'$CYAN'"$(__git_ps1 " (git: %s)")
   fi)'$LIGHT_GRAY" \w"$WHITE"\n$ "
+fi
