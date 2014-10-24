@@ -1,7 +1,7 @@
 # Bash settings
 
 export PATH=$PATH:$HOME/bin:
-export EDITOR='subl -w'
+export EDITOR=vim
 
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
   platform='linux'
@@ -121,3 +121,4 @@ else
     else echo "'$CYAN'"$(__git_ps1 " (git: %s)")
   fi)'$LIGHT_GRAY" \w"$WHITE"\n$ "
 fi
+
