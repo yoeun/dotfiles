@@ -1,5 +1,8 @@
 " Vim settings
 
+filetype on
+filetype off
+
 set nocompatible              " be iMproved, required
 filetype off                  " required
  
